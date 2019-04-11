@@ -1,9 +1,14 @@
 package ua.procamp.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * todo:
@@ -25,16 +30,39 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
+@Table(name = "company")
 public class Company {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+
+    @Setter(value = AccessLevel.PRIVATE)
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
     public void addProduct(Product product) {
-        throw new UnsupportedOperationException("I'm still not implemented!");
+        products.add(product);
+        product.setCompany(this);
     }
 
     public void removeProduct(Product product) {
-        throw new UnsupportedOperationException("I'm still not implemented!");
+        products.remove(product);
+        product.setCompany(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Company)) return false;
+        Company company = (Company) o;
+        return Objects.equals(getId(), company.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
