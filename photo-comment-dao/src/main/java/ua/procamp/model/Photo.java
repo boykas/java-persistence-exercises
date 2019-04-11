@@ -1,8 +1,9 @@
 package ua.procamp.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,20 +24,31 @@ import java.util.List;
  * - enable cascade type {@link javax.persistence.CascadeType#ALL} for field {@link Photo#comments}
  * - enable orphan removal
  */
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Getter
 @Setter
+@Entity
+@Table(name = "photo")
 public class Photo {
+    @Id
+    @GeneratedValue
     private Long id;
+    @Column(nullable = false, unique = true)
     private String url;
     private String description;
-    private List<PhotoComment> comments;
+    @Setter(value = AccessLevel.PRIVATE)
+    @OneToMany(mappedBy = "photo", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PhotoComment> comments = new ArrayList<>();
 
     public void addComment(PhotoComment comment) {
-        throw new UnsupportedOperationException("Make me work!");
+     comments.add(comment);
+     comment.setPhoto(this);
     }
 
     public void removeComment(PhotoComment comment) {
-        throw new UnsupportedOperationException("Make me work!");
+        comments.remove(comment);
+        comment.setPhoto(null);
     }
 
 }

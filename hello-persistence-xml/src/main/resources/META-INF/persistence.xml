@@ -11,4 +11,18 @@
     <!--todo: configure a hibernate SQL dialect for H2 database-->
     <!--todo: configure hibernate generate DDL and create database-->
 
+    <persistence-unit name="TuttiFrutti">
+        <class>ua.procamp.model.Song</class>
+
+        <properties>
+            <property name="hibernate.connection.url" value="jdbc:h2:mem:tutti_frutti_db;"/>
+            <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+            <property name="hibernate.connection.username" value="little_richard"/>
+            <property name="hibernate.connection.password" value="rock_n_roll_is_alive"/>
+            <property name="hibernate.dialect" value=""/>
+            <property name="hibernate.hbm2ddl" value="create"/>
+        </properties>
+
+    </persistence-unit>
+
 </persistence>
